@@ -1,35 +1,38 @@
 # Canvas Ghost Mode
 
-A Chrome/Edge extension with compact violet controls for Canvas page visibility masking and selected activity-request filters. Version 4.3 uses a charcoal, Dear ImGui-inspired interface with a draggable title bar, compact tabs, and inset controls.
+A Chrome and Edge extension that masks Canvas page visibility and blocks selected activity requests. Version 4.3 adds a compact charcoal-and-violet panel with draggable controls and tabs.
+
+> [!WARNING]
+> I haven't verified this release on a live Canvas instructor account because I don't currently have one available. Instructure permanently discontinued Free-for-Teacher after the 2026 security incidents. [Instructure's incident update](https://www.instructure.com/incident_update)
+>
+> The local tests pass, so I expect the listed filters to work, but live Canvas compatibility is unverified. Use at your own risk. If you're unsure, try it in a VM with a separate browser profile first.
 
 ![Canvas Ghost Mode panel](docs/panel.png)
 
 ## Install
 
-1. Download the extension ZIP from [Releases](https://github.com/bodanator/canvas-ghost-mode/releases/latest) and extract it to a folder you will keep.
+1. Download the extension ZIP from [Releases](https://github.com/bodanator/canvas-ghost-mode/releases/latest) and extract it to a permanent folder.
 2. Open `chrome://extensions` or `edge://extensions`, turn on **Developer mode**, and choose **Load unpacked**.
 3. Select the extracted folder containing `manifest.json`. The browser lists the extension as **Canvas Ghost Mode Network Filter**.
 4. Disable any older Canvas Ghost Mode Tampermonkey copy, then refresh your Canvas page. The panel starts in the bottom-right corner.
 
 For a source checkout, load the `extension` folder directly. To update an existing unpacked installation, replace its files, click **Reload** on the extension card, and refresh Canvas.
 
-Automatic loading covers `instructure.com`, its subdomains, and `canvas.<school>.edu`. Check the extension's **Details → Site access** if the panel is missing on a supported site. A custom hostname needs both a content-script match and corresponding network rules to receive both types of filtering.
+Supported hosts are `instructure.com`, its subdomains, and `canvas.<school>.edu`. If the panel is missing, check **Details → Site access** on the extension card. Other hostnames need matching content-script settings and network rules.
 
 ## Controls
 
-| Action | Control |
-| --- | --- |
-| Move the panel | Drag its title bar |
-| Collapse or expand | Title-bar triangle or `Alt+Shift+G` |
-| Pause or resume page filters | Status button or `Alt+Shift+P` |
-| Inspect and reattach page hooks | **Check page hooks** |
-| Change filtering or restore position | **Settings** |
+- Drag the title bar to move the panel.
+- Use the title-bar triangle or `Alt+Shift+G` to collapse or expand it.
+- Use the Status button or `Alt+Shift+P` to pause or resume page filters.
+- **Check page hooks** checks and reattaches the browser API hooks.
+- **Settings** contains the filtering options and position reset.
 
-Settings are stored in the Canvas origin's local storage. Matching frames have their own hooks and diagnostics, while the top document displays the panel. The panel reattaches after page-body replacement.
+Settings are saved per Canvas site. Each matching frame has its own hooks and diagnostics, and the main page shows the panel.
 
 ## Network coverage
 
-The browser's declarative network rules block these writes to supported destination hosts, including requests made through workers and native browser APIs.
+The extension's browser network rules block these writes on supported hosts, including requests from workers and saved browser API references.
 
 | Endpoint | Blocked methods |
 | --- | --- |
@@ -39,13 +42,15 @@ The browser's declarative network rules block these writes to supported destinat
 
 Rules accept query strings, optional trailing slashes, encoded letters in `page_views` and `events`, and encoded decimal course/quiz IDs. The Classic Quiz rule suppresses the entire event batch at its endpoint.
 
-Pausing the panel affects its page-level masking and fetch/XHR/beacon wrappers. Browser network rules stay active until the extension is disabled. The displayed counter counts requests intercepted by this document's wrappers. Ordinary course loads, answer saves, and final submissions still reach Canvas and can create server records. Custom hosts, other endpoints, and New Quizzes require separate coverage. A page can also detect or replace page-world hooks.
+Pausing the panel pauses its visibility masking and fetch/XHR/beacon hooks. The extension's network rules stay active until you disable the extension. The panel counter covers requests intercepted by that page's hooks.
 
-The shipped extension makes no requests of its own and bundles all interface styles. It stores only panel settings, with a bounded in-memory list of request-rule and hook notices. The list omits request URLs, bodies, and timestamps.
+Ordinary course loads, answer saves, and final submissions reach Canvas and can create server records. Other endpoints, custom hosts, and New Quizzes need separate coverage. Canvas can detect or replace page hooks.
+
+The extension makes no requests of its own. It saves panel settings locally and keeps a bounded activity log in memory. The log contains rule names and hook notices, without request URLs, bodies, or timestamps.
 
 ## Build and verify
 
-The installed extension has no runtime dependencies. Python 3 builds the ZIP and standalone userscript. Node.js 20+ and Playwright run the browser checks.
+Python 3 builds the ZIP and standalone userscript. Node.js 20+ and Playwright run the browser tests. The installed extension has no runtime dependencies.
 
 ```sh
 python scripts/build.py
@@ -56,29 +61,15 @@ npm test
 
 Builds appear in `dist`. For an existing Chromium or Chrome for Testing installation, set `CHROME_PATH` to its executable before running the tests.
 
-The network tests compare an extension-disabled control with the actual unpacked extension. A local HTTP receiver records whether requests arrived and verifies allowed request methods and bodies. The panel tests use the normal manifest entry point and real browser input. Test artifacts are written to `test-results`.
+Version 4.3.0 was tested in Chrome for Testing 156.0.8078.4 with isolated profiles and a local HTTP receiver.
 
-Version 4.3.0 passed these checks in Chrome for Testing 156.0.8078.4 using isolated profiles and loopback servers.
+- All 13 targeted activity writes arrived with the extension disabled. None arrived with it enabled.
+- All 9 allowed requests arrived in both runs. Answer-save and final-submission methods and bodies were preserved.
+- The targeted cross-origin preflight arrived only with the extension disabled.
+- All 7 panel scenarios passed, including shortcuts, dragging, saved settings, body replacement, frame scope, and a 375-pixel viewport.
 
-| Receiver or interface check | Extension disabled | Extension enabled |
-| --- | --- | --- |
-| Targeted activity writes received | 13 of 13 | 0 of 13 |
-| Allowed requests received, including document load | 9 of 9 | 9 of 9 |
-| Targeted cross-origin preflights received | 1 | 0 |
-| Panel interaction scenarios | — | 7 of 7 passed |
+The network cases cover fetch, XHR, beacons, dedicated and service workers, cross-origin requests, form POSTs, both hostname patterns, and encoded routes. Tests load the actual unpacked extension and write results to `test-results`.
 
-Network cases cover original browser fetch/XHR/beacon functions, dedicated workers, service workers, cross-origin requests, form POSTs, both hostname patterns, and encoded routes. Allowed answer-save and final-submission bodies arrived intact. Panel checks cover controls, keyboard shortcuts, reload persistence, body replacement, dragging, a 375-pixel viewport, frame scope, and network rules while page filters are paused. This verification used local fixtures. Live school-account behavior remains untested.
+The page hooks and UI are in `extension/panel.js`. `scripts/build.py` generates the manifest, network rules, ZIP, and standalone userscript. Browser tests are in `tests`.
 
-## Project files
-
-| Path | Purpose |
-| --- | --- |
-| `extension/panel.js` | Page hooks, UI, and standalone userscript metadata |
-| `scripts/build.py` | Generates the manifest, ten network rules, and installable packages |
-| `extension/manifest.json` | Generated extension configuration |
-| `extension/rules.json` | Generated browser network rules |
-| `tests` | Local HTTP receiver and browser verification |
-
-Original userscript attribution is preserved in `panel.js`. The interface follows the supplied miasma ImGui visual reference.
-
-Browser behavior follows the [Chrome declarativeNetRequest API](https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest) and [content-script manifest](https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts). The test setup follows [Playwright's extension testing guidance](https://playwright.dev/docs/chrome-extensions).
+Based on the original Canvas Ghost Mode userscript by realdawgace. The original attribution is preserved in `extension/panel.js`.
