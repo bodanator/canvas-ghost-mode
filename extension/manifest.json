@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Canvas Ghost Mode Network Filter",
+  "version": "4.3.0",
+  "minimum_chrome_version": "111",
+  "description": "Shows Canvas Ghost Mode controls and filters selected page-view and Classic Quiz activity requests.",
+  "permissions": [
+    "declarativeNetRequest"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.instructure.com/*"
+      ],
+      "js": [
+        "panel.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://*.edu/*"
+      ],
+      "include_globs": [
+        "*://canvas.*.edu/*",
+        "*://canvas.*.edu:*/*"
+      ],
+      "js": [
+        "panel.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "canvas_activity",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  }
+}

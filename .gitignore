@@ -1,0 +1,8 @@
+node_modules/
+dist/
+test-results/
+extension/_metadata/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

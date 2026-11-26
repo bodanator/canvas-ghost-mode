@@ -1,0 +1,210 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "instructure.com"
+      ],
+      "regexFilter": "^https?://[a-z0-9.:-]+/(p|%70)(a|%61)(g|%67)(e|%65)(_|%5[fF])(v|%76)(i|%69)(e|%65)(w|%77)(s|%73)/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "instructure.com"
+      ],
+      "regexFilter": "^https?://[a-z0-9.:-]+/(p|%70)(a|%61)(g|%67)(e|%65)(_|%5[fF])(v|%76)(i|%69)(e|%65)(w|%77)(s|%73)/[!-\\x22$-.0->@-~]+/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post",
+        "put",
+        "patch"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "instructure.com"
+      ],
+      "regexFilter": "^https?://[a-z0-9.:-]+/api/v1/(p|%70)(a|%61)(g|%67)(e|%65)(_|%5[fF])(v|%76)(i|%69)(e|%65)(w|%77)(s|%73)/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "instructure.com"
+      ],
+      "regexFilter": "^https?://[a-z0-9.:-]+/api/v1/(p|%70)(a|%61)(g|%67)(e|%65)(_|%5[fF])(v|%76)(i|%69)(e|%65)(w|%77)(s|%73)/[!-\\x22$-.0->@-~]+/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post",
+        "put",
+        "patch"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  },
+  {
+    "id": 5,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "instructure.com"
+      ],
+      "regexFilter": "^https?://[a-z0-9.:-]+/api/v1/courses/(?:(?:%3)?[0-9])+/quizzes/(?:(?:%3)?[0-9])+/submissions/[!-\\x22$-.0->@-~]+/(e|%65)(v|%76)(e|%65)(n|%6[eE])(t|%74)(s|%73)/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "edu"
+      ],
+      "regexFilter": "^https?://canvas[.][a-z0-9.:-]+/(p|%70)(a|%61)(g|%67)(e|%65)(_|%5[fF])(v|%76)(i|%69)(e|%65)(w|%77)(s|%73)/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "edu"
+      ],
+      "regexFilter": "^https?://canvas[.][a-z0-9.:-]+/(p|%70)(a|%61)(g|%67)(e|%65)(_|%5[fF])(v|%76)(i|%69)(e|%65)(w|%77)(s|%73)/[!-\\x22$-.0->@-~]+/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post",
+        "put",
+        "patch"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "edu"
+      ],
+      "regexFilter": "^https?://canvas[.][a-z0-9.:-]+/api/v1/(p|%70)(a|%61)(g|%67)(e|%65)(_|%5[fF])(v|%76)(i|%69)(e|%65)(w|%77)(s|%73)/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  },
+  {
+    "id": 9,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "edu"
+      ],
+      "regexFilter": "^https?://canvas[.][a-z0-9.:-]+/api/v1/(p|%70)(a|%61)(g|%67)(e|%65)(_|%5[fF])(v|%76)(i|%69)(e|%65)(w|%77)(s|%73)/[!-\\x22$-.0->@-~]+/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post",
+        "put",
+        "patch"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  },
+  {
+    "id": 10,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": [
+        "edu"
+      ],
+      "regexFilter": "^https?://canvas[.][a-z0-9.:-]+/api/v1/courses/(?:(?:%3)?[0-9])+/quizzes/(?:(?:%3)?[0-9])+/submissions/[!-\\x22$-.0->@-~]+/(e|%65)(v|%76)(e|%65)(n|%6[eE])(t|%74)(s|%73)/?(?:[?]|$)",
+      "isUrlFilterCaseSensitive": true,
+      "requestMethods": [
+        "post"
+      ],
+      "excludedResourceTypes": [
+        "websocket"
+      ]
+    }
+  }
+]
